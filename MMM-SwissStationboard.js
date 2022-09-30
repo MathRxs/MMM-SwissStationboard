@@ -26,7 +26,7 @@ Module.register("MMM-SwissStationboard",{
         minWalkingTime: -1,
         hideTrackInfo: 0,
 		hideNotReachable: 0,
-		type:['train', 'bus','tram','express_train','post','strain']
+		type:['train', 'bus','tram','express_train','post','strain'],
 
                 
 //		titleReplace: {
