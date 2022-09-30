@@ -25,7 +25,9 @@ Module.register("MMM-SwissStationboard",{
 		maximumEntries: 5, // Total Maximum Entries
         minWalkingTime: -1,
         hideTrackInfo: 0,
-	hideNotReachable: 0,
+		hideNotReachable: 0,
+		type:['train', 'bus','tram','express_train','post','strain']
+
                 
 //		titleReplace: {
 //			"Zeittabelle ": ""
@@ -257,29 +259,30 @@ Module.register("MMM-SwissStationboard",{
 				var trains = data.connections[i];
 
 				if("time" in trains && "terminal" in trains) {
-					
-					var conn = {
-						departureTimestampRaw: trains.time,
-						departureTimestamp: moment(trains.time).format("HH:mm"),
-						delay: parseInt(trains.dep_delay),
-						to: trains.terminal.name,
-						number: trains.line,
-						track: trains.track,
-						type: trains.type
-					};
-					
-					if (typeof conn.number == 'undefined'){
-						conn.number = trains.number;
+					if(this.config.type.include(trains.type)){
+						var conn = {
+							departureTimestampRaw: trains.time,
+							departureTimestamp: moment(trains.time).format("HH:mm"),
+							delay: parseInt(trains.dep_delay),
+							to: trains.terminal.name,
+							number: trains.line,
+							track: trains.track,
+							type: trains.type
+						};
+						
+						if (typeof conn.number == 'undefined'){
+							conn.number = trains.number;
+						}
+						if (typeof conn.track != 'undefined') {
+							conn.trackChange = conn.track.indexOf("!") > 0;
+						}
+						else {
+							conn.track = "";
+							conn.trackChange = 0;
+						}
+									
+						this.trains.push(conn);
 					}
-					if (typeof conn.track != 'undefined') {
-						conn.trackChange = conn.track.indexOf("!") > 0;
-					}
-					else {
-						conn.track = "";
-						conn.trackChange = 0;
-					}
-								
-					this.trains.push(conn);
 				}
 			}
 		}
